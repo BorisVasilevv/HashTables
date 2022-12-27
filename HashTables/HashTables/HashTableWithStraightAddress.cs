@@ -31,6 +31,15 @@ namespace HashTables
             Count = 0;
         }
 
+        public HashTableWithStraightAddress(HashFuncType hashFuncType, int size)
+        {
+            _size = size;
+            GetHash = HashFunc.GetHashFunc(hashFuncType);
+            _items = new Node<TKey, TValue?>[_size];
+            _removed = new bool[_size];
+            Count = 0;
+        }
+
         public int GetHashStep(int hash)
         {
 

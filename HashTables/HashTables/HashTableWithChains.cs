@@ -38,7 +38,17 @@ namespace HashTables
             _not_full_size = (int)(_size * CoefFullnessToExctention);
             Count = 0;
         }
-       
+
+        public HashTableWithChains(HashFuncType hashFuncType, int size)
+        {
+            _size = size;
+            GetHash = HashFunc.GetHashFunc(hashFuncType);
+            _items = new LinkedList<Node<TKey, TValue?>>?[_size];
+
+            _not_full_size = (int)(_size * CoefFullnessToExctention);
+            Count = 0;
+        }
+
         public void Add(TKey key, TValue value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));

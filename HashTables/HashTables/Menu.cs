@@ -37,7 +37,7 @@ namespace HashTables
             DrawMenu();
             answer = NumberOfSelectedElem;
             NumberOfSelectedElem = 0;
-            ClearConsole();
+            ConsoleHelper.ClearConsole();
             return answer;
         }
 
@@ -49,10 +49,11 @@ namespace HashTables
             Console.CursorVisible = false;
             while(!isUserChoose)
             {
-                ClearConsole();
-                for(int i=0;i<_answers.Count;i++)
+                ConsoleHelper.ClearConsole();
+                Console.WriteLine(_question);
+                for (int i=0;i<_answers.Count;i++)
                 {
-                    if(i==NumberOfSelectedElem) Console.BackgroundColor=ConsoleColor.Cyan;
+                    if(i==NumberOfSelectedElem) Console.BackgroundColor=ConsoleColor.DarkCyan;
                     Console.WriteLine(_answers[i]);
                     Console.BackgroundColor=ConsoleColor.Black;                   
                 }
@@ -70,7 +71,7 @@ namespace HashTables
                         break;
                     case ConsoleKey.Enter:
                         isUserChoose = true;
-                        
+                        ConsoleHelper.ClearConsole();
                         break;
 
                 }
@@ -93,14 +94,6 @@ namespace HashTables
         }
 
 
-        void ClearConsole()
-        {
-            for(int i=0;i<Console.WindowHeight;i++)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.WriteLine(new string(' ', Console.WindowWidth));
-            }
-            Console.SetCursorPosition(0, 0);
-        }
+        
     }
 }
