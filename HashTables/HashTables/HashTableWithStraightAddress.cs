@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HashTables
 {
-    class HashTableWithStraightAddress<TKey, TValue>
+    class HashTableWithStraightAddress<TKey, TValue> : IHashTable<TKey, TValue>
     {
         private readonly int _size;
 
@@ -52,6 +52,10 @@ namespace HashTables
                 : nextIndex;
         }
 
+        public int GetHashStepLineary()
+        {
+            return 1;
+        }
 
         public void Add(TKey key, TValue value)
         {
@@ -102,10 +106,12 @@ namespace HashTables
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
             if (Count == _size) throw new Exception("Таблица полность заполнена");
             int step = GetHashStep(arrayIndex);
+
             while (_items[arrayIndex]==null||!_items[arrayIndex].Key.Equals(key))
             {
                 do
                 {
+
                     arrayIndex += step;
                     if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
                 } while (_removed[arrayIndex] == true);

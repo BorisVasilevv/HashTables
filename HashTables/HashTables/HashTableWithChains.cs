@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HashTables
 {
-    class HashTableWithChains<TKey, TValue>
+    class HashTableWithChains<TKey, TValue> : IHashTable<TKey,TValue>
     {
 
         private readonly int _size;
