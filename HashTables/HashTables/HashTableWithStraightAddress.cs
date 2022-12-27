@@ -10,11 +10,9 @@ namespace HashTables
     {
         private readonly int _size;
 
+        Node<TKey, TValue?>[] _items;
 
-
-        KeyValuePair<TKey, TValue?>[] _items;
-
-        double NowCoefOfFull() => (double)Count / _size;
+       
 
         public int Count { get; private set; }
 
@@ -28,47 +26,16 @@ namespace HashTables
         {
             _size = 10000;
              GetHash = HashFunc.GetHashFunc(hashFuncType);
-            _items = new KeyValuePair<TKey, TValue?>[_size];
+            _items = new Node<TKey, TValue?>[_size];
             _removed = new bool[_size];
             Count = 0;
         }
-
-
-        public int MaxClusterLength()
+            
+        public int GetHashStep()
         {
 
-
-            int max = 0;
-            int current = 0;
-            foreach (var item in _items)
-            {
-                if (!item.Equals(default(KeyValuePair<TKey, TValue>)))
-                {
-                    current++;
-                }
-                else
-                {
-                    max = Math.Max(max, current);
-                    current = 0;
-                }
-            }
-
-            return Math.Max(max, current);
-
+            return 0;
         }
-
-
-        protected bool CheckUniqueKey(TKey key)
-        {
-            foreach (var item in _items)
-            {
-                if (item.Key != null && item.Key.Equals(key)) return false;
-            }
-
-            return true;
-        }
-
-
 
 
     }

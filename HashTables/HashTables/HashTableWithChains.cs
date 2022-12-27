@@ -67,7 +67,7 @@ namespace HashTables
 
 
 
-
+        
 
         private LinkedList<Node<TKey,TValue?>> GetList(int index)
         {
@@ -75,7 +75,7 @@ namespace HashTables
             if(list == null)
             {
                 list = new LinkedList<Node<TKey, TValue?>>();
-
+                _items[index]=list;
                 AmountOfLists++;
                 CoefOfFullnessNow = (double)AmountOfLists / _size;
                 if(CoefOfFullnessNow>=CoefFullnessToExctention&&!isSizeFull)

@@ -47,7 +47,7 @@ namespace HashTables
                     return HashRs;
                 case HashFuncType.Div:
                     return HashDiv;
-
+                    
 
             }
 
