@@ -22,14 +22,15 @@ namespace HashTables
 
         private bool[] _removed;
 
-        HashFuncType _hashType;
+ 
 
         public HashTableWithStraightAddress(HashFuncType hashFuncType)
         {
             _size = 10000;
-            _hashType = hashFuncType;
+             GetHash = HashFunc.GetHashFunc(hashFuncType);
             _items = new KeyValuePair<TKey, TValue?>[_size];
-            _removed = new bool[_size];      
+            _removed = new bool[_size];
+            Count = 0;
         }
 
 
@@ -67,83 +68,8 @@ namespace HashTables
             return true;
         }
 
-        protected bool CheckOpenSpace()
-        {
-            var isOpen = false;
-            for (var i = 0; i < _size; i++)
-            {
-                if (_items[i].Equals(default(KeyValuePair<TKey, TValue?>))) isOpen = true;
-            }
-
-            return isOpen;
-        }
-
-        public void Add(TKey key, TValue value)
-        {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-
-            if (!CheckOpenSpace()) throw new ArgumentOutOfRangeException("Хеш-таблица переполнена.");
-
-            if (!CheckUniqueKey(key)) throw new ArgumentException("Элемент по указанному ключу уже существует.");
-
-            Insert(key, value);
-        }
-
-        protected void Insert(TKey key, TValue value)
-        {
-            var index = 0;
-            var hashCode = GetHash(key, index);
-
-            while (!_items[hashCode].Equals(default(KeyValuePair<TKey, TValue>)) && !_items[hashCode].Key.Equals(key))
-            {
-                index++;
-                hashCode = GetHash(key, index);
-            }
-
-            _items[hashCode] = new KeyValuePair<TKey, TValue?>(key, value);
-            _removed[hashCode] = false;
-            Count++;
-        }
 
 
-        public TValue? GetValue(TKey key)
-        {
-            if (key == null) throw new ArgumentNullException(nameof(key));
 
-            var index = 0;
-            var hashCode = GetHash(key, index);
-
-            while ((!_items[hashCode].Equals(default(KeyValuePair<TKey, TValue>)) || _removed[hashCode]) && !_items[hashCode].Key.Equals(key))
-            {
-                index++;
-                hashCode = GetHash(key, index);
-            }
-
-            return _items[hashCode].Value;
-        }
-
-        public bool Remove(TKey key)
-        {
-            var index = 0;
-            var hashCode = GetHash(key, index);
-
-            while ((!_items[hashCode].Equals(default(KeyValuePair<TKey, TValue>)) || _removed[hashCode]) && !_items[hashCode].Key.Equals(key))
-            {
-                index++;
-                hashCode = GetHash(key, index);
-            }
-
-            if (_items[hashCode].Equals(default(KeyValuePair<TKey, TValue>)))
-            {
-                return false;
-            }
-            else
-            {
-                _items[hashCode] = default;
-                _removed[hashCode] = true;
-                Count--;
-                return true;
-            }
-        }
     }
 }
