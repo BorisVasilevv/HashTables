@@ -47,7 +47,7 @@ namespace HashTables
         }
 
 
-        public void Insert(Node<TKey, TValue?> item)
+        private void Insert(Node<TKey, TValue?> item)
         {
 
             int arrayIndex = GetHash(item.Key, isSizeFull?_size: _not_full_size);
@@ -63,11 +63,7 @@ namespace HashTables
             Count++;
 
 
-        }
-
-
-
-        
+        }        
 
         private LinkedList<Node<TKey,TValue?>> GetList(int index)
         {

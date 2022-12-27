@@ -30,6 +30,7 @@ namespace HashTables
                 }
             }
             randomValue = rnd.Next();
+            
             Menu chooseTaskMenu = new Menu("Выберите задание:",
                 "Метод разрешения коллизий с помощью цепочек", "Метод открытой адресации для разрешения коллизий", "Выйти");
             int indexOfAnswer = chooseTaskMenu.GetIndexOfAnswer();

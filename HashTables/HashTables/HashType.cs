@@ -9,6 +9,8 @@ namespace HashTables
     enum HashFuncType
     {
         Rs, 
-        Div
+        Div,
+        MD5,
+        Sha256
     }
 }

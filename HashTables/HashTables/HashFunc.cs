@@ -8,7 +8,25 @@ namespace HashTables
 {
     class HashFunc
     {
-        
+
+        public static Func<object, int, int> GetHashFunc(HashFuncType hashFuncType)
+        {
+
+            switch (hashFuncType)
+            {
+                case HashFuncType.Rs:
+                    return HashRs;
+                case HashFuncType.Div:
+                    return HashDiv;
+                case HashFuncType.MD5:
+                    return CreateMD5;
+                case HashFuncType.Sha256:
+                    return Sha256;
+
+            }
+
+            return null;
+        }
 
         public static int HashRs(object obj, int sizeTable)
         {
@@ -38,94 +56,29 @@ namespace HashTables
             return Math.Abs(hash) % sizeTable;
         }
 
-        public static Func<object, int, int> GetHashFunc(HashFuncType hashFuncType)
+        
+
+
+        public static int CreateMD5(object input, int sizeTable)
         {
-
-            switch (hashFuncType)
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
-                case HashFuncType.Rs:
-                    return HashRs;
-                case HashFuncType.Div:
-                    return HashDiv;
-                    
+                byte[] inputBytes = Encoding.ASCII.GetBytes(input.ToString());
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+                int inthash = BitConverter.ToInt32(hashBytes, 0);
 
+                return inthash%sizeTable; 
             }
-
-            return null;
         }
 
-        //        public static string CreateMD5(string input)
-        //        {
-        //            // Use input string to calculate MD5 hash
-        //            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-        //            {
-        //                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-        //                byte[] hashBytes = md5.ComputeHash(inputBytes);
+        static int Sha256(object randomString, int sizeTable)
+        {
+            var crypt = new System.Security.Cryptography.SHA256Managed();
+            var hash = new StringBuilder();
+            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString.ToString()));
 
-        //                return Convert.ToHexString(hashBytes); // .NET 5 +
-
-        //                // Convert the byte array to hexadecimal string prior to .NET 5
-        //                // StringBuilder sb = new System.Text.StringBuilder();
-        //                // for (int i = 0; i < hashBytes.Length; i++)
-        //                // {
-        //                //     sb.Append(hashBytes[i].ToString("X2"));
-        //                // }
-        //                // return sb.ToString();
-        //            }
-        //        }
-
-
-        //        static string sha256(string randomString)
-        //        {
-        //            var crypt = new System.Security.Cryptography.SHA256Managed();
-        //            var hash = new System.Text.StringBuilder();
-        //            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString));
-        //            foreach (byte theByte in crypto)
-        //            {
-        //                hash.Append(theByte.ToString("x2"));
-        //            }
-        //            return hash.ToString();
-        //        }
-
-
-
-        //        static int HashRs(string str)
-        //        {
-
-        //            int b = 378551;
-        //            int a = 63689;
-        //            int hash = 0;
-
-        //            for (int i = 0; i < str.Length; i++)
-        //            {
-        //                hash = hash * a + (str[i]);
-        //                a *= b;
-        //            }
-
-        //            return hash;
-
-        //        }
-
-
-
-
-        //        unsigned int HashFAQ6(const char* str)
-        //{
-
-        //    unsigned int hash = 0;
-
-        //    for (; *str; str++)
-        //    {
-        //        hash += (unsigned char)(* str);
-        //hash += (hash << 10);
-        //hash ^= (hash >> 6);
-        //    }
-        //    hash += (hash << 3);
-        //hash ^= (hash >> 11);
-        //hash += (hash << 15);
-
-        //return hash;
-
-        //}
+            return BitConverter.ToInt32(crypto, 0)%sizeTable;
+        }
     }
 }
