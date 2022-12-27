@@ -10,7 +10,7 @@ namespace HashTables
     {
         private readonly int _size;
 
-        const double CoefStartAugmentation = 0.75;
+
 
         KeyValuePair<TKey, TValue?>[] _items;
 

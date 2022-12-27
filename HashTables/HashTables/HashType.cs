@@ -8,7 +8,7 @@ namespace HashTables
 {
     enum HashFuncType
     {
-        First, 
-        Second
+        Rs, 
+        Div
     }
 }

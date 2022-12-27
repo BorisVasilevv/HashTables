@@ -8,23 +8,47 @@ namespace HashTables
 {
     class HashFunc
     {
-        public static int HashFunction(object obj, int sizeTable)
+        
+
+        public static int HashRs(object obj, int sizeTable)
         {
+            String str = obj.ToString();
+            int b = 378551;
+            int a = 63689;
+            int hash = 0;
 
+            for (int i = 0; i < str.Length; i++)
+            {
+                hash = hash * a + (str[i]);
+                a *= b;
+            }
 
-            return 0;
+            return hash % sizeTable;
+
         }
 
+        public static int HashDiv(object obj, int sizeTable)
+        {
+            String str = obj.ToString();
+            int hash = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                hash = (hash << 5) - hash + (int)str[i];
+            }
+            return Math.Abs(hash) % sizeTable;
+        }
 
-
-        public static Func<object,int,int> GetHashFunc(HashFuncType hashFuncType)
+        public static Func<object, int, int> GetHashFunc(HashFuncType hashFuncType)
         {
 
             switch (hashFuncType)
             {
-                case HashFuncType.First:
-                    return HashFunction;
-            
+                case HashFuncType.Rs:
+                    return HashRs;
+                case HashFuncType.Div:
+                    return HashDiv;
+
+
             }
 
             return null;
