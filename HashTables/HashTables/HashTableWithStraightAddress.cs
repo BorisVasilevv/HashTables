@@ -81,6 +81,7 @@ namespace HashTables
         {
             for (int i = 0; i < _items.Length; i++)
             {
+                if (_items[i] == null) continue;
                 if (_items[i].Key.Equals(key) && !_removed[i]) return true;
             }
             return false;
@@ -99,7 +100,7 @@ namespace HashTables
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
 
             int step = GetHashStep(arrayIndex);
-            while (!_items[arrayIndex].Key.Equals(key))
+            while (_items[arrayIndex]==null||!_items[arrayIndex].Key.Equals(key))
             {
                 do
                 {
