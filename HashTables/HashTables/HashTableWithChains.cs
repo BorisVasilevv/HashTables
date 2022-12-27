@@ -55,7 +55,7 @@ namespace HashTables
         {
 
             int arrayIndex = GetHash(item.Key, isSizeFull?_size: _not_full_size);
-
+ 
             LinkedList<Node<TKey, TValue?>> list = GetList(arrayIndex);
 
             foreach(Node<TKey, TValue?> pair in list)

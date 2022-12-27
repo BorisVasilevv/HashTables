@@ -41,7 +41,7 @@ namespace HashTables
                 a *= b;
             }
 
-            return hash % sizeTable;
+            return Math.Abs(hash) % sizeTable;
 
         }
 
@@ -61,14 +61,14 @@ namespace HashTables
 
         public static int CreateMD5(object input, int sizeTable)
         {
-            // Use input string to calculate MD5 hash
+          
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
                 byte[] inputBytes = Encoding.ASCII.GetBytes(input.ToString());
                 byte[] hashBytes = md5.ComputeHash(inputBytes);
                 int inthash = BitConverter.ToInt32(hashBytes, 0);
 
-                return inthash%sizeTable; 
+                return Math.Abs(inthash)%sizeTable; 
             }
         }
 
@@ -78,7 +78,7 @@ namespace HashTables
             var hash = new StringBuilder();
             byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString.ToString()));
 
-            return BitConverter.ToInt32(crypto, 0)%sizeTable;
+            return Math.Abs(BitConverter.ToInt32(crypto, 0)) % sizeTable;
         }
     }
 }

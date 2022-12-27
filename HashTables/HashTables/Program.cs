@@ -14,7 +14,7 @@ namespace HashTables
         public static void Main(string[] args)
         {
 
-            HashTableWithChains<int, string> ht = new HashTableWithChains<int, string>(HashFuncType.Div);
+            HashTableWithChains<int, string> ht = new HashTableWithChains<int, string>(HashFuncType.MD5);
             Random rnd = new Random();
             List<int> list = new List<int>();
             int randomValue = 0;
