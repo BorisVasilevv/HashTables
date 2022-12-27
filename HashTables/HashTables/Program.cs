@@ -27,21 +27,30 @@ namespace HashTables
             {
                 HashFuncType type=ChooseHashFunc();
                 int size = PositiveNumberFromUser();
+                hashTableCh= new HashTableWithChains<string, string>(type, size);
+                if(IsDataNeedGenerate())
+                {
+                    DataWorker.AddDataOnHashTable( DataWorker.GenerateStringKeys(size), hashTableCh);
+                }
 
             }
             else if (indexOfAnswer == StraightAdresMethodIndex)
             {
                 HashFuncType type = ChooseHashFunc();
                 int size = PositiveNumberFromUser();
+                hashTableStraightAddress= new HashTableWithStraightAddress<string, string>(type,size);
+                if (IsDataNeedGenerate())
+                {
+                    DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(size), hashTableStraightAddress);
+                }
             }
 
-            Console.ReadKey();
+            
 
 
             
 
-            Menu workWithTableMenu = new Menu("Выберите, что вы хотите сделать:",
-                "Добавить элемент в таблицу", "Найти элемент", "Удалить элемент", "Изменить значение элемента" ,"Выйти");
+            
         }
 
 
@@ -96,7 +105,7 @@ namespace HashTables
             return result;
         }
 
-        public bool IsDataNeedGenerate()
+        public static bool IsDataNeedGenerate()
         {
             Console.WriteLine("Сгенерировать данные?\nНажмите Y чтобы сгенерировать случайные данные\nНажмите N чтобы оставить таблицу пустой");
             bool isAnswerCorrect=false;
@@ -124,6 +133,19 @@ namespace HashTables
 
             ConsoleHelper.ClearConsole();
             return result;
+        }
+
+        const int AddIndex = 0;
+        const int SearchIndex = 1;
+        const int DeleteIndex = 2;
+        
+        const int UpdateIndex = 3;
+        const int ExitFromWorkTableIndex = 4;
+        public static void UserWorkWithTable()
+        {
+            Menu workWithTableMenu = new Menu("Выберите, что вы хотите сделать:",
+                "Добавить элемент в таблицу", "Найти элемент", "Удалить элемент", "Изменить значение элемента", "Выйти");
+            int res=workWithTableMenu.GetIndexOfAnswer();
         }
     }
 }

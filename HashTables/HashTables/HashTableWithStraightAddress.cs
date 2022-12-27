@@ -44,9 +44,11 @@ namespace HashTables
         {
 
             double m = (Math.Sqrt(5) - 1) / 2;
-            int nextIndex = (int)(31 * ((hash * m) % 1));
+            if (hash == 0) return 31;
+            int nextIndex = (int)(hash * m) + (int)Math.Pow(hash, 2);
+            
             return _size % nextIndex == 0
-                ? nextIndex * (int)((Math.Sqrt(_size) % 1) - 1)
+                ? nextIndex * (int)((Math.Sqrt(_size)) - 1)
                 : nextIndex;
         }
 
@@ -98,7 +100,7 @@ namespace HashTables
         {
             int arrayIndex = GetHash(key, _size);
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
-
+            if (Count == _size) throw new Exception("Таблица полность заполнена");
             int step = GetHashStep(arrayIndex);
             while (_items[arrayIndex]==null||!_items[arrayIndex].Key.Equals(key))
             {
@@ -117,7 +119,7 @@ namespace HashTables
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
 
             int step = GetHashStep(arrayIndex);
-            while (!_items[arrayIndex].Key.Equals(key))
+            while (_items[arrayIndex] == null || !_items[arrayIndex].Key.Equals(key))
             {
                 do
                 {
@@ -135,7 +137,7 @@ namespace HashTables
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
 
             int step = GetHashStep(arrayIndex);
-            while (!_items[arrayIndex].Key.Equals(key))
+            while (_items[arrayIndex] == null || !_items[arrayIndex].Key.Equals(key))
             {
                 do
                 {
@@ -145,6 +147,7 @@ namespace HashTables
             }
 
             _removed[arrayIndex] = true;
+            Count--;
         }
 
 
