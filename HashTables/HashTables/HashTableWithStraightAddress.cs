@@ -137,5 +137,25 @@ namespace HashTables
             _removed[arrayIndex] = true;
         }
 
+
+        public int MaxClasterLength()
+        {
+            int max = 0;
+            int current = 0;
+            for(int i=0;i<_items.Length;i++)
+            {
+                if (_items[i] != null && !_removed[i])
+                {
+                    current++;
+                }
+                else
+                {
+                    max = Math.Max(max, current);
+                    current = 0;
+                }
+            }
+            max = Math.Max(max, current);
+            return max;
+        }
     }
 }

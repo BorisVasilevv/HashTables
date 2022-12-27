@@ -46,6 +46,10 @@ namespace HashTables
             Insert(item);
         }
 
+        public int MaxChainLength=> _items.Select(x=>x.Count).Max();
+        public int MinChainLength => _items.Select(x => x.Count).Min();
+
+        public int[] AllChainsLengths => _items.Select(x => x.Count).ToArray();
 
         private void Insert(Node<TKey, TValue?> item)
         {
