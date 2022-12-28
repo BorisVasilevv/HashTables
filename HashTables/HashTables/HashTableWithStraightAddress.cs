@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HashTables
 {
-    class HashTableWithStraightAddress<TKey, TValue> : IHashTable<TKey, TValue>
+    class HashTableWithStraightAddress<TKey, TValue> : IHashTable<TKey, TValue?>
     {
         private readonly int _size;
 
@@ -20,6 +20,7 @@ namespace HashTables
 
         private bool[] _removed;
 
+        //public int _idStep = 0;
 
 
         public HashTableWithStraightAddress(HashFuncType hashFuncType)
@@ -40,22 +41,43 @@ namespace HashTables
             Count = 0;
         }
 
-        public int GetHashStep(int hash)
+        public TKey[] GetKeys(int amountOfKeys)
         {
+            List<TKey> keys = new List<TKey>();
 
-            double m = (Math.Sqrt(5) - 1) / 2;
-            if (hash == 0) return 31;
-            int nextIndex = (int)(hash * m) + (int)Math.Pow(hash, 2);
-            
-            return _size % nextIndex == 0
-                ? nextIndex * (int)((Math.Sqrt(_size)) - 1)
-                : nextIndex;
+
+            foreach (Node<TKey, TValue> node in _items)
+            {
+                keys.Add(node.Key);
+                if (keys.Count >= amountOfKeys) break;
+            }
+
+
+            return keys.ToArray();
         }
 
-        public int GetHashStepLineary()
+        public int GetHashStepQuerty(int hash, int idStep)
+        {
+            double m = (Math.Sqrt(5) - 1) / 2;
+            double n = 2.71828;
+            if (hash == 0) return 31;
+            int nextIndex = hash + (int)(idStep * m) + (int)(Math.Pow(idStep, 2) * n) % _size;
+
+            return nextIndex;
+        }
+
+
+        private int GetHashStepLinely(int hash, int idStep)
         {
             return 1;
         }
+
+        public int GetHashStepDoubleHash(int hash, int idStep)
+        {
+            return 0;
+
+        }
+
 
         public void Add(TKey key, TValue value)
         {
@@ -68,15 +90,18 @@ namespace HashTables
 
         private void Insert(Node<TKey, TValue?> item)
         {
+            int idStep = 0;
 
             int arrayIndex = GetHash(item.Key, _size);
 
 
-            int step = GetHashStep(arrayIndex);
+
             while (_items[arrayIndex] != null || _removed[arrayIndex])
             {
+                int step = GetHashStepQuerty(arrayIndex, idStep);
                 arrayIndex += step;
                 if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
+                idStep++;
             }
             _items[arrayIndex] = item;
             _removed[arrayIndex] = false;
@@ -102,18 +127,20 @@ namespace HashTables
 
         public TValue? GetValue(TKey key)
         {
+            int idStep = 0;
+
             int arrayIndex = GetHash(key, _size);
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
             if (Count == _size) throw new Exception("Таблица полность заполнена");
-            int step = GetHashStep(arrayIndex);
 
-            while (_items[arrayIndex]==null||!_items[arrayIndex].Key.Equals(key))
+            while (_items[arrayIndex] == null || !_items[arrayIndex].Key.Equals(key))
             {
                 do
                 {
-
+                    int step = GetHashStepQuerty(arrayIndex, idStep);
                     arrayIndex += step;
                     if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
+                    idStep++;
                 } while (_removed[arrayIndex] == true);
             }
             return _items[arrayIndex].Value;
@@ -121,16 +148,21 @@ namespace HashTables
 
         public void SetValue(TKey key, TValue value)
         {
+            int idStep = 0;
+
+
             int arrayIndex = GetHash(key, _size);
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
 
-            int step = GetHashStep(arrayIndex);
             while (_items[arrayIndex] == null || !_items[arrayIndex].Key.Equals(key))
             {
                 do
                 {
+                    int step = GetHashStepQuerty(arrayIndex, idStep);
+
                     arrayIndex += step;
                     if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
+                    idStep++;
                 } while (_removed[arrayIndex] == true);
             }
 
@@ -139,16 +171,20 @@ namespace HashTables
 
         public void Remove(TKey key)
         {
+            int idStep = 0;
+
             int arrayIndex = GetHash(key, _size);
             if (!IsKeyExsist(key)) throw new ArgumentException("Такого ключа не существует");
 
-            int step = GetHashStep(arrayIndex);
             while (_items[arrayIndex] == null || !_items[arrayIndex].Key.Equals(key))
             {
                 do
                 {
+                    int step = GetHashStepQuerty(arrayIndex, idStep);
+
                     arrayIndex += step;
                     if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
+                    idStep++;
                 } while (_removed[arrayIndex] == true);
             }
 
@@ -161,7 +197,7 @@ namespace HashTables
         {
             int max = 0;
             int current = 0;
-            for(int i=0;i<_items.Length;i++)
+            for (int i = 0; i < _items.Length; i++)
             {
                 if (_items[i] != null && !_removed[i])
                 {

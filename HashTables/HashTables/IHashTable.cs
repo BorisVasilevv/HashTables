@@ -19,5 +19,7 @@ namespace HashTables
         public void Remove(TKey key);
 
         public void Add(TKey key, TValue value);
+
+        public TKey[] GetKeys(int amountOfKeys);
     }
 }

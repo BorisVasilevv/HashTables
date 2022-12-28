@@ -22,27 +22,32 @@ namespace HashTables
             {
                 System.Environment.Exit(0);
             }
-            else if (indexOfAnswer == ChainsMethodIndex)
+
+            HashFuncType type = ChooseHashFunc();
+            Console.WriteLine("Введите размер таблицы");
+            int size = PositiveNumberFromUser();
+
+            if (indexOfAnswer == ChainsMethodIndex)
             {
-                HashFuncType type = ChooseHashFunc();
-                int size = PositiveNumberFromUser();
+                
                 hashTableChains = new HashTableWithChains<string, string>(type, size);
                 if (IsDataNeedGenerate())
                 {
+                    Console.WriteLine("Генерация данных");
                     DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(size), hashTableChains);
                 }
                 TableToWork = hashTableChains;
             }
             else if (indexOfAnswer == StraightAdresMethodIndex)
             {
-                HashFuncType type = ChooseHashFunc();
-                int size = PositiveNumberFromUser();
+                
                 hashTableStraightAddress = new HashTableWithStraightAddress<string, string>(type, size);
                 if (IsDataNeedGenerate())
                 {
+                    Console.WriteLine("Генерация данных");
                     DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(size), hashTableStraightAddress);
                 }
-                TableToWork = hashTableStraightAddress;
+                TableToWork =hashTableStraightAddress;
             }
 
             UserWorkWithTable();
@@ -77,7 +82,7 @@ namespace HashTables
 
         public static int PositiveNumberFromUser()
         {
-            Console.WriteLine("Введите размер таблицы");
+            
             Console.CursorVisible = true;
             int result;
             string answer = Console.ReadLine();
@@ -105,7 +110,7 @@ namespace HashTables
             bool result = false;
             while (!isAnswerCorrect)
             {
-                ConsoleKeyInfo key = Console.ReadKey(false);
+                ConsoleKeyInfo key = Console.ReadKey(true);
 
                 if (key.KeyChar.ToString().ToUpper()[0] == 'N')
                 {
@@ -133,11 +138,12 @@ namespace HashTables
         const int DeleteIndex = 2;
 
         const int UpdateIndex = 3;
-        const int ExitFromWorkTableIndex = 4;
+        const int ShowKeysToUserIndex = 4;
+        const int ExitFromWorkTableIndex = 5;
         public static void UserWorkWithTable()
         {
             Menu workWithTableMenu = new Menu("Выберите, что вы хотите сделать:",
-                "Добавить элемент в таблицу", "Найти элемент", "Удалить элемент", "Изменить значение элемента", "Выйти");
+                "Добавить элемент в таблицу", "Найти элемент", "Удалить элемент", "Изменить значение элемента","Вывести первые n ключей", "Выйти");
             do
             {
                 int res = workWithTableMenu.GetIndexOfAnswer();
@@ -152,30 +158,68 @@ namespace HashTables
                             key = GetKeyOrValue(true);
                             value = GetKeyOrValue(false);
                             TableToWork.Add(key, value);
+                            Console.WriteLine("Элемент добавлен успешно");
                             break;
                         case SearchIndex:
                             key = GetKeyOrValue(true);
-                            Console.WriteLine($"Результат: {TableToWork[key]}");
+                            Console.WriteLine($"Элемент с ключём {key} найден\nЗначение элемента: {TableToWork[key]}");
                             break;
                         case DeleteIndex:
                             key = GetKeyOrValue(true);
-                            TableToWork.Remove(key);
+                            Console.WriteLine($"Элемент с ключём {key} удалён\nЗначение элемента было: {TableToWork[key]}");
+                            TableToWork.Remove(key);                  
                             break;
                         case UpdateIndex:
                             key = GetKeyOrValue(true);
                             value = GetKeyOrValue(false);
-                            TableToWork.SetValue(key, value);
-                            break;
 
+                            string oldValue = TableToWork[key];
+                            TableToWork[key] = value;
+                            Console.WriteLine($"Значение по ключу {key} изменено\nСтарое значение: {oldValue}\nНовое значение: {value}");
+
+                            break;
+                        case ShowKeysToUserIndex:
+                            int countKeys=TableToWork.Count;
+                            if( countKeys == 0 )
+                            {
+                                Console.WriteLine("В таблице нет элементов");
+                                break;
+                            }
+                            Console.WriteLine($"Введите число от 1 до {countKeys}");
+                            bool isAnswerCorrect = false;
+                            int number = 0;
+                            while (!isAnswerCorrect)
+                            {
+                                number= PositiveNumberFromUser();
+                                isAnswerCorrect = number <= countKeys;
+                                if(!isAnswerCorrect)
+                                {
+                                    Console.WriteLine($"Такого количества ключей нет, введите число поменьше, число от 1 до {countKeys}");
+                                }
+                            }
+                            ConsoleHelper.ClearConsole();
+                            string[] keys = TableToWork.GetKeys(number);
+                            foreach (string k in keys)
+                            {
+                                Console.WriteLine(k);
+                            }
+                            
+
+                            break;
                         case ExitFromWorkTableIndex:
                             Environment.Exit(0);
                             break;
 
                     }
+             
+                    Console.WriteLine("Нажмите любую клавишу, чтобы продолжить");
+                    Console.ReadKey(false);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    Console.WriteLine("Нажмите любую клавишу, чтобы продолжить");
+                    Console.ReadKey(false);
                 }
             } while (true);
         }
@@ -184,7 +228,8 @@ namespace HashTables
         public static string GetKeyOrValue(bool IsUserInputKey)
         {
             string str=null;
-            if(IsUserInputKey)
+            Console.CursorVisible = true;
+            if (IsUserInputKey)
             {
                 Console.WriteLine("Введите ключ");
                 while (str == null||str==String.Empty)
@@ -200,7 +245,7 @@ namespace HashTables
                 Console.WriteLine("Введите значение");
                 str = Console.ReadLine();
             }
-
+            ConsoleHelper.ClearConsole();
             return str;
         }
     }

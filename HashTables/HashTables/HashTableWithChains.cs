@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HashTables
 {
-    class HashTableWithChains<TKey, TValue> : IHashTable<TKey,TValue>
+    class HashTableWithChains<TKey, TValue> : IHashTable<TKey, TValue?>
     {
 
         private readonly int _size;
@@ -17,7 +17,7 @@ namespace HashTables
         int AmountOfLists = 0;
         double CoefOfFullnessNow { get; set; }
 
-        bool isSizeFull=false;
+        bool isSizeFull = false;
 
         private readonly int _not_full_size;
 
@@ -34,7 +34,7 @@ namespace HashTables
             _size = 1000;
             GetHash = HashFunc.GetHashFunc(hashFuncType);
             _items = new LinkedList<Node<TKey, TValue?>>?[_size];
-            
+
             _not_full_size = (int)(_size * CoefFullnessToExctention);
             Count = 0;
         }
@@ -49,6 +49,28 @@ namespace HashTables
             Count = 0;
         }
 
+
+        public TKey[] GetKeys(int amountOfKeys)
+        {
+            List<TKey> keys = new List<TKey>();
+
+
+            foreach (LinkedList<Node<TKey, TValue?>> list in _items)
+            {
+                if (list != null)
+                {
+                    foreach (Node<TKey, TValue?> node in list)
+                    {
+                        keys.Add(node.Key);
+                        if (keys.Count >= amountOfKeys) return keys.ToArray();
+                    }
+                }
+            }
+
+
+            return keys.ToArray();
+        }
+
         public void Add(TKey key, TValue value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -56,7 +78,7 @@ namespace HashTables
             Insert(item);
         }
 
-        public int MaxChainLength=> _items.Select(x=>x.Count).Max();
+        public int MaxChainLength => _items.Select(x => x.Count).Max();
         public int MinChainLength => _items.Select(x => x.Count).Min();
 
         public int[] AllChainsLengths => _items.Select(x => x.Count).ToArray();
@@ -64,31 +86,31 @@ namespace HashTables
         private void Insert(Node<TKey, TValue?> item)
         {
 
-            int arrayIndex = GetHash(item.Key, isSizeFull?_size: _not_full_size);
- 
+            int arrayIndex = GetHash(item.Key, isSizeFull ? _size : _not_full_size);
+
             LinkedList<Node<TKey, TValue?>> list = GetList(arrayIndex);
 
-            foreach(Node<TKey, TValue?> pair in list)
+            foreach (Node<TKey, TValue?> pair in list)
             {
-                if(item.Key.Equals(pair.Key)) throw new ArgumentException("Элемент по указанному ключу уже существует.");
+                if (item.Key.Equals(pair.Key)) throw new ArgumentException("Элемент по указанному ключу уже существует.");
             }
 
             list.AddLast(item);
             Count++;
 
 
-        }        
+        }
 
-        private LinkedList<Node<TKey,TValue?>> GetList(int index)
+        private LinkedList<Node<TKey, TValue?>> GetList(int index)
         {
             LinkedList<Node<TKey, TValue?>> list = _items[index];
-            if(list == null)
+            if (list == null)
             {
                 list = new LinkedList<Node<TKey, TValue?>>();
-                _items[index]=list;
+                _items[index] = list;
                 AmountOfLists++;
                 CoefOfFullnessNow = (double)AmountOfLists / _size;
-                if(CoefOfFullnessNow>=CoefFullnessToExctention&&!isSizeFull)
+                if (CoefOfFullnessNow >= CoefFullnessToExctention && !isSizeFull)
                 {
                     isSizeFull = true;
                     RewriteTable();
@@ -101,12 +123,12 @@ namespace HashTables
 
         private void RewriteTable()
         {
-            List<LinkedList<Node<TKey, TValue?>>?> oldData = new List<LinkedList<Node<TKey, TValue?>>?>( _items );
+            List<LinkedList<Node<TKey, TValue?>>?> oldData = new List<LinkedList<Node<TKey, TValue?>>?>(_items);
 
 
 
             _items = new LinkedList<Node<TKey, TValue?>>?[_size];
-            foreach(LinkedList<Node<TKey, TValue?>> list in oldData)
+            foreach (LinkedList<Node<TKey, TValue?>> list in oldData)
             {
                 if (list != null)
                 {
@@ -120,7 +142,7 @@ namespace HashTables
             oldData = null;
         }
 
-        public void SetValue(TKey key, TValue value)
+        public void SetValue(TKey key, TValue? value)
         {
             int arrayIndex = GetHash(key, isSizeFull ? _size : _not_full_size);
             LinkedList<Node<TKey, TValue?>> list = GetList(arrayIndex);
@@ -137,16 +159,16 @@ namespace HashTables
                 }
             }
 
-            if(!isKeyFound) throw new ArgumentException("Неправильный ключ, такого ключа нет в таблице");
+            if (!isKeyFound) throw new ArgumentException("Неправильный ключ, такого ключа нет в таблице");
 
         }
 
-        public TValue this[TKey key]
+        public TValue? this[TKey key]
         {
             get => GetValue(key);
             set => SetValue(key, value);
         }
-        
+
 
         public TValue? GetValue(TKey key)
         {
@@ -160,31 +182,31 @@ namespace HashTables
                 if (key.Equals(pair.Key))
                 {
                     return pair.Value;
-                    
+
                 }
             }
 
             throw new ArgumentException("Неправильный ключ, такого ключа нет в таблице");
         }
 
-       
+
         public void Remove(TKey key)
         {
             int arrayIndex = GetHash(key, isSizeFull ? _size : _not_full_size);
             LinkedList<Node<TKey, TValue?>> list = GetList(arrayIndex);
-            Node<TKey, TValue?> node=null;
+            Node<TKey, TValue?> node = null;
 
             foreach (Node<TKey, TValue?> pair in list)
             {
                 if (key.Equals(pair.Key))
                 {
-                    node=pair;
-                    
+                    node = pair;
+
                     break;
                 }
             }
 
-            if(node==null) throw new ArgumentException("Неправильный ключ, такого ключа нет в таблице");
+            if (node == null) throw new ArgumentException("Неправильный ключ, такого ключа нет в таблице");
             list.Remove(node);
         }
 

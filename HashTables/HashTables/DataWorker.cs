@@ -58,18 +58,19 @@ namespace HashTables
 
         public static void AddDataOnHashTable<T>(List<T> keys, HashTableWithChains<T, string> ht)
         {
+            Random random = new Random();
             foreach (T key in keys)
             {
-                ht.Add(key, key.ToString());
+                ht.Add(key, random.Next().ToString());
             }
         }
 
         public static void AddDataOnHashTable<T>(List<T> keys, HashTableWithStraightAddress<T, string> ht)
         {
-
+            Random random = new Random();
             foreach (T key in keys)
             {
-                ht.Add(key, key.ToString());
+                ht.Add(key, random.Next().ToString());
             }
 
         }
