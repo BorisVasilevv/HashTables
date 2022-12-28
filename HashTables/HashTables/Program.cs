@@ -31,8 +31,12 @@ namespace HashTables
             {
                 
                 hashTableChains = new HashTableWithChains<string, string>(type, size);
+
                 if (IsDataNeedGenerate())
                 {
+                    //Console.WriteLine($"Введите число от 1 до {size}");
+                    //int numder=PositiveNumberFromUser();
+
                     Console.WriteLine("Генерация данных");
                     DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(size), hashTableChains);
                 }
@@ -72,6 +76,9 @@ namespace HashTables
 
             UserWorkWithTable();
         }
+
+
+        
 
 
         const int MD5Index = 0;

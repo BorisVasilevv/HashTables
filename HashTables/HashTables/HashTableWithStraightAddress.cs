@@ -77,7 +77,7 @@ namespace HashTables
         public int GetHashStepDoubleHash(int hash, int idStep, TKey key)
         {
             
-            hash += idStep * HashFunc.FAQ6(key);
+            hash += idStep * HashFunc.FAQ6(key,_size);
 
             return hash;
 
@@ -97,7 +97,7 @@ namespace HashTables
             else
             {
                 return GetHashStepDoubleHash(hash, idStep, key);
-                //_typeFunc=StepSearchMethodType.DoubleHash
+                //_typeFunc==StepSearchMethodType.DoubleHash
             }            
         }
 

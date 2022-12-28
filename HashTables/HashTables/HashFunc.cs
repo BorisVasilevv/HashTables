@@ -75,14 +75,14 @@ namespace HashTables
         static int Sha256(object randomString, int sizeTable)
         {
             var crypt = new System.Security.Cryptography.SHA256Managed();
-            var hash = new StringBuilder();
+            
             byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString.ToString()));
 
             return Math.Abs(BitConverter.ToInt32(crypto, 0)) % sizeTable;
         }
 
 
-        public static int FAQ6(object obj)
+        public static int FAQ6(object obj,int sizeTable)
         {
             int hash = 0;
             string str = obj.ToString();
@@ -95,7 +95,7 @@ namespace HashTables
             hash += (hash << 3);
             hash ^= (hash >> 11);
             hash += (hash << 15);
-            return Math.Abs(hash);
+            return Math.Abs(hash%sizeTable);
         }
     }
 }
