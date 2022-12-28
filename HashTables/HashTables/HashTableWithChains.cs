@@ -78,8 +78,34 @@ namespace HashTables
             Insert(item);
         }
 
-        public int MaxChainLength => _items.Select(x => x.Count).Max();
-        public int MinChainLength => _items.Select(x => x.Count).Min();
+        public int MaxChainLength
+        {
+            get
+            {
+                int max = 0;
+                foreach(var item in _items)
+                {
+                    if(item != null&&item.Count>max)
+                        max= item.Count;
+                }
+                return max;
+            }
+            
+        }
+       
+        public int MinChainLength
+        {
+            get
+            {
+                int min = int.MaxValue;
+                foreach (var item in _items)
+                {
+                    if (item != null && item.Count < min)
+                        min = item.Count;
+                }
+                return min;
+            }
+        }
 
         public int[] AllChainsLengths => _items.Select(x => x.Count).ToArray();
 

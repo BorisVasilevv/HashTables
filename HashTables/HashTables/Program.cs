@@ -40,8 +40,28 @@ namespace HashTables
             }
             else if (indexOfAnswer == StraightAdresMethodIndex)
             {
+
+                Menu menuHelp = new Menu("Выберите метод поиска шага по массиву",
+                    "Линейный","Квадратичный","Двойного хэширования", "Выйти");
+                int answer = menuHelp.GetIndexOfAnswer();
+                if(answer==0)
+                {
+                    hashTableStraightAddress = new HashTableWithStraightAddress<string, string>(type, size, StepSearchMethodType.Linear);
+                }
+                else if(answer==1)
+                {
+                    hashTableStraightAddress = new HashTableWithStraightAddress<string, string>(type, size, StepSearchMethodType.Sqr);
+                }
+                else if( answer==2)
+                {
+                    hashTableStraightAddress = new HashTableWithStraightAddress<string, string>(type, size, StepSearchMethodType.DoubleHash);
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+
                 
-                hashTableStraightAddress = new HashTableWithStraightAddress<string, string>(type, size);
                 if (IsDataNeedGenerate())
                 {
                     Console.WriteLine("Генерация данных");

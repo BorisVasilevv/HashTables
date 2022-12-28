@@ -20,20 +20,22 @@ namespace HashTables
 
         private bool[] _removed;
 
-        //public int _idStep = 0;
 
+        readonly StepSearchMethodType _typeFunc;
 
-        public HashTableWithStraightAddress(HashFuncType hashFuncType)
+        public HashTableWithStraightAddress(HashFuncType hashFuncType, StepSearchMethodType typeSearch)
         {
             _size = 10000;
+            _typeFunc = typeSearch;
             GetHash = HashFunc.GetHashFunc(hashFuncType);
             _items = new Node<TKey, TValue?>[_size];
             _removed = new bool[_size];
             Count = 0;
         }
 
-        public HashTableWithStraightAddress(HashFuncType hashFuncType, int size)
+        public HashTableWithStraightAddress(HashFuncType hashFuncType, int size, StepSearchMethodType typeSearch)
         {
+            _typeFunc = typeSearch;
             _size = size;
             GetHash = HashFunc.GetHashFunc(hashFuncType);
             _items = new Node<TKey, TValue?>[_size];
@@ -67,17 +69,37 @@ namespace HashTables
         }
 
 
-        private int GetHashStepLinely(int hash, int idStep)
+        private int GetHashStepLinely()
         {
             return 1;
         }
 
-        public int GetHashStepDoubleHash(int hash, int idStep)
+        public int GetHashStepDoubleHash(int hash, int idStep, TKey key)
         {
-            return 0;
+            
+            hash += idStep * HashFunc.FAQ6(key);
+
+            return hash;
 
         }
 
+
+        public int GetHGashStep(int hash, int idStep, TKey key)
+        {
+            if(_typeFunc==StepSearchMethodType.Sqr)
+            {
+                return GetHashStepQuerty(hash, idStep);
+            }
+            else if(_typeFunc==StepSearchMethodType.Linear)
+            {
+                return GetHashStepLinely();
+            }
+            else
+            {
+                return GetHashStepDoubleHash(hash, idStep, key);
+                //_typeFunc=StepSearchMethodType.DoubleHash
+            }            
+        }
 
         public void Add(TKey key, TValue value)
         {
@@ -98,7 +120,7 @@ namespace HashTables
 
             while (_items[arrayIndex] != null || _removed[arrayIndex])
             {
-                int step = GetHashStepQuerty(arrayIndex, idStep);
+                int step = GetHGashStep(arrayIndex, idStep, item.Key);
                 arrayIndex += step;
                 if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
                 idStep++;
@@ -137,7 +159,7 @@ namespace HashTables
             {
                 do
                 {
-                    int step = GetHashStepQuerty(arrayIndex, idStep);
+                    int step = GetHGashStep(arrayIndex, idStep, key); 
                     arrayIndex += step;
                     if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
                     idStep++;
@@ -158,7 +180,7 @@ namespace HashTables
             {
                 do
                 {
-                    int step = GetHashStepQuerty(arrayIndex, idStep);
+                    int step = GetHGashStep(arrayIndex, idStep, key);
 
                     arrayIndex += step;
                     if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
@@ -180,7 +202,7 @@ namespace HashTables
             {
                 do
                 {
-                    int step = GetHashStepQuerty(arrayIndex, idStep);
+                    int step = GetHGashStep(arrayIndex, idStep, key);
 
                     arrayIndex += step;
                     if (arrayIndex >= _size) arrayIndex = arrayIndex % _size;
