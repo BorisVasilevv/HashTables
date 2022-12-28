@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ namespace HashTables
                     return CreateMD5;
                 case HashFuncType.Sha256:
                     return Sha256;
+                case HashFuncType.RemOfDivLast4:
+                    return RemainderOfDivision;
 
             }
 
@@ -75,14 +78,33 @@ namespace HashTables
         static int Sha256(object randomString, int sizeTable)
         {
             var crypt = new System.Security.Cryptography.SHA256Managed();
-            
+
             byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString.ToString()));
 
             return Math.Abs(BitConverter.ToInt32(crypto, 0)) % sizeTable;
         }
 
 
-        public static int FAQ6(object obj,int sizeTable)
+        public static int RemainderOfDivision(object obj, int size)
+        {
+            
+            byte[] inputBytes = Encoding.ASCII.GetBytes(obj.ToString());
+            int i = inputBytes.Length - 1;
+            int result = 0;
+            int counter = 0;
+            while (counter<4)
+            {
+
+                result += inputBytes[i] * (int)(Math.Pow(256, counter));
+                i--;
+                counter++;
+            }
+
+            return Math.Abs(result) % size;
+        }
+
+
+        public static int FAQ6(object obj, int sizeTable)
         {
             int hash = 0;
             string str = obj.ToString();
@@ -95,7 +117,9 @@ namespace HashTables
             hash += (hash << 3);
             hash ^= (hash >> 11);
             hash += (hash << 15);
-            return Math.Abs(hash%sizeTable);
+            return Math.Abs(hash )% sizeTable;
         }
     }
+
+
 }

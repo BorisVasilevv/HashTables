@@ -11,6 +11,7 @@ namespace HashTables
         Rs, 
         Div,
         MD5,
-        Sha256
+        Sha256,
+        RemOfDivLast4
     }
 }

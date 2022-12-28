@@ -85,11 +85,12 @@ namespace HashTables
         const int RsIndex = 1;
         const int Sha256 = 2;
         const int DivIndex = 3;
-        const int ExitHashMenuIndex = 4;
+        const int RemOfDivIndex = 4;
+        const int ExitHashMenuIndex = 5;
         public static HashFuncType ChooseHashFunc()
         {
             Menu chooseHashFuncTypeMenu = new Menu("Выберите хэш-функцию:",
-                "MD5", "Rs", "Sha256", "Div", "Выйти");
+                "MD5", "Rs", "Sha256", "Div", "RemOfDivLast4","Выйти");
             int indexOfAnsver = chooseHashFuncTypeMenu.GetIndexOfAnswer();
             switch (indexOfAnsver)
             {
@@ -97,6 +98,7 @@ namespace HashTables
                 case RsIndex: return HashFuncType.Rs;
                 case Sha256: return HashFuncType.Sha256;
                 case DivIndex: return HashFuncType.Div;
+                case RemOfDivIndex: return HashFuncType.RemOfDivLast4;
                 case ExitHashMenuIndex:
                     Environment.Exit(0);
                     break;
