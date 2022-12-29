@@ -94,9 +94,17 @@ namespace HashTables
             int counter = 0;
             while (counter<4)
             {
+                if(i>=0)
+                {
 
-                result += inputBytes[i] * (int)(Math.Pow(256, counter));
-                i--;
+                    result += inputBytes[i] * (int)(Math.Pow(256, counter));
+                    i--;
+                }
+                else
+                {
+                    result += 0;
+                }
+                
                 counter++;
             }
 

@@ -34,11 +34,11 @@ namespace HashTables
 
                 if (IsDataNeedGenerate())
                 {
-                    //Console.WriteLine($"Введите число от 1 до {size}");
-                    //int numder=PositiveNumberFromUser();
-
+                    
+                    Console.WriteLine("Введите сколько данных нужно сгенерировать");
+                    int countOfElem=PositiveNumberFromUser();
                     Console.WriteLine("Генерация данных");
-                    DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(size), hashTableChains);
+                    DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(countOfElem), hashTableChains);
                 }
                 TableToWork = hashTableChains;
             }
@@ -68,8 +68,11 @@ namespace HashTables
                 
                 if (IsDataNeedGenerate())
                 {
+
+                    Console.WriteLine("Введите сколько данных нужно сгенерировать");
+                    int countOfElem = PositiveNumberWithRestriction(size);
                     Console.WriteLine("Генерация данных");
-                    DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(size), hashTableStraightAddress);
+                    DataWorker.AddDataOnHashTable(DataWorker.GenerateStringKeys(countOfElem), hashTableStraightAddress);
                 }
                 TableToWork =hashTableStraightAddress;
             }
@@ -130,6 +133,25 @@ namespace HashTables
             } while (true);
             ConsoleHelper.ClearConsole();
             return result;
+        }
+
+
+        public static int PositiveNumberWithRestriction(int resttriction)
+        {
+            Console.WriteLine($"Введите число от 1 до {resttriction}");
+            bool isAnswerCorrect = false;
+            int number = 0;
+            while (!isAnswerCorrect)
+            {
+                number = PositiveNumberFromUser();
+                isAnswerCorrect = number <= resttriction;
+                if (!isAnswerCorrect)
+                {
+                    Console.WriteLine($"Такого количества ключей нет, введите число поменьше, число от 1 до {resttriction}");
+                }
+            }
+            ConsoleHelper.ClearConsole();
+            return number;
         }
 
         public static bool IsDataNeedGenerate()
@@ -214,18 +236,10 @@ namespace HashTables
                                 Console.WriteLine("В таблице нет элементов");
                                 break;
                             }
-                            Console.WriteLine($"Введите число от 1 до {countKeys}");
-                            bool isAnswerCorrect = false;
-                            int number = 0;
-                            while (!isAnswerCorrect)
-                            {
-                                number= PositiveNumberFromUser();
-                                isAnswerCorrect = number <= countKeys;
-                                if(!isAnswerCorrect)
-                                {
-                                    Console.WriteLine($"Такого количества ключей нет, введите число поменьше, число от 1 до {countKeys}");
-                                }
-                            }
+                            
+                            
+                            int number = PositiveNumberWithRestriction(countKeys);
+                           
                             ConsoleHelper.ClearConsole();
                             string[] keys = TableToWork.GetKeys(number);
                             foreach (string k in keys)

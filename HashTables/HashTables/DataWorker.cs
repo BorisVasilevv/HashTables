@@ -32,14 +32,14 @@ namespace HashTables
 
         }
 
-        public static List<string> GenerateStringKeys(int length)
+        public static List<string> GenerateStringKeys(int countOfKeys)
         {
 
             Random rnd = new Random();
             List<string> list = new List<string>();
             string randomValue;
 
-            while (list.Count != length)
+            while (list.Count != countOfKeys)
             {
 
                 randomValue = rnd.Next().ToString();
