@@ -190,11 +190,16 @@ namespace HashTables
 
         const int UpdateIndex = 3;
         const int ShowKeysToUserIndex = 4;
-        const int ExitFromWorkTableIndex = 5;
+        const int GetClasterOrMinMaxChainIndex = 5;
+        const int ExitFromWorkTableIndex = 6;
         public static void UserWorkWithTable()
         {
+            bool tableWithChains= TableToWork is HashTableWithChains<string, string>;
+
+            string str = tableWithChains ? "Вывести длину максимальной и минимальной цепочки" : "Вывести длину максимального кластера";
+            
             Menu workWithTableMenu = new Menu("Выберите, что вы хотите сделать:",
-                "Добавить элемент в таблицу", "Найти элемент", "Удалить элемент", "Изменить значение элемента","Вывести первые n ключей", "Выйти");
+                "Добавить элемент в таблицу", "Найти элемент", "Удалить элемент", "Изменить значение элемента","Вывести первые n ключей", str, "Выйти");
             do
             {
                 int res = workWithTableMenu.GetIndexOfAnswer();
@@ -223,12 +228,11 @@ namespace HashTables
                         case UpdateIndex:
                             key = GetKeyOrValue(true);
                             value = GetKeyOrValue(false);
-
                             string oldValue = TableToWork[key];
                             TableToWork[key] = value;
                             Console.WriteLine($"Значение по ключу {key} изменено\nСтарое значение: {oldValue}\nНовое значение: {value}");
-
                             break;
+
                         case ShowKeysToUserIndex:
                             int countKeys=TableToWork.Count;
                             if( countKeys == 0 )
@@ -236,18 +240,27 @@ namespace HashTables
                                 Console.WriteLine("В таблице нет элементов");
                                 break;
                             }
-                            
-                            
-                            int number = PositiveNumberWithRestriction(countKeys);
-                           
+                                                    
+                            int number = PositiveNumberWithRestriction(countKeys);                          
                             ConsoleHelper.ClearConsole();
                             string[] keys = TableToWork.GetKeys(number);
                             foreach (string k in keys)
+                                Console.WriteLine(k);                                                        
+                            break;
+                        case GetClasterOrMinMaxChainIndex:
+                            if(tableWithChains)
                             {
-                                Console.WriteLine(k);
+                                HashTableWithChains<string, string> table =(HashTableWithChains<string, string>)TableToWork;
+                                int max = table.MaxChainLength;
+                                int min = table.MinChainLength;
+                                Console.WriteLine($"Максимальная длина цепочки: {max}\nМимимальная длина цепочки: {min}");
                             }
-                            
-
+                            else
+                            {
+                                HashTableWithStraightAddress<string,string> table2 = (HashTableWithStraightAddress<string,string>)TableToWork;
+                                int maxClaster = table2.MaxClasterLength();
+                                Console.WriteLine($"Длина максимального кластера состовляет: {maxClaster}");
+                            }
                             break;
                         case ExitFromWorkTableIndex:
                             Environment.Exit(0);
